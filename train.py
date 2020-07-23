@@ -1,14 +1,17 @@
 import os
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+
+tf.compat.v1.disable_eager_execution()
+
 import network
 
 from loader import Loader
 from config import conf
 
 siamese = network.Siamese()
-train_step = tf.train.RMSPropOptimizer(0.01).minimize(siamese.loss)
+train_step = tf.train.RMSPropOptimizer(0.001).minimize(siamese.loss)
 saver = tf.train.Saver()
 init = tf.initialize_all_variables()
 

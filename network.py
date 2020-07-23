@@ -1,4 +1,6 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+
+tf.compat.v1.disable_eager_execution()
 
 from config import conf
 
@@ -18,16 +20,33 @@ class Siamese:
         self.loss = self.loss_with_spring()
     
     def network(self, x):
-        for p in conf('network.cnn'):
+        return eval(f'self.{conf("network.active").lower()}')(x)
+    
+    def lenet5(self, x):
+        for p in conf('network.lenet5.cnn'):
             x = self.conv(x, p['conv']['filter'], p['conv']['bias'])
+            x = tf.nn.relu(x)
             x = self.pool(x, p['pool']['ksize'], p['pool']['strides'])
         i = 0
         x = tf.reshape(x, [-1, 13 * 13 * 120])
-        for p in conf('network.fc'):
+        for p in conf('network.lenet5.fc'):
             x = tf.layers.dense(x, p, activation='sigmoid', name=f'fc_{i}')
             i += 1
         return x
     
+    def googlenet(self, x):
+        return x
+    
+    def g_conv(self, x):
+        x1 = self.conv(x, [1, 1, 3, 128], [128])
+        x2 = self.conv(x, [1, 1, 3, 16], [16])
+        x2 = self.conv(x2, [3, 3, 16, 128], [128])
+        x3 = self.conv(x, [1, 1, 3, 16], [16])
+        x3 = self.conv(x3, [5, 5, 16, 128], [128])
+        x4 = self.pool(x, [1, 3, 3, 1], [1, 2, 2, 1])
+        x4 = self.conv(x4, [1, 1, 3, 128], [128])
+        return tf.concat([x1, x2, x3, x4])
+
     def conv(self, x, filter_size, bias_size):
         filter = tf.Variable(tf.truncated_normal(filter_size))
         bias = tf.Variable(tf.truncated_normal(bias_size))

@@ -1,55 +1,71 @@
 {
-    "image": {
-        "root": "./image/",
-        "size": [100, 100]
-    },
-    "aug": {
-        "train": {
-            "factor": 10,
-            "output": "aug-train"
-        },
-        "test": {
-            "factor": 10,
-            "output": "aug-test"
-        }
-    },
-    "labels": ["红茶", "绿茶", "茉莉花茶", "乌龙茶"],
-    "network": {
-        "cnn": [
-            {
-                "conv": {
-                    "filter": [5, 5, 3, 6],
-                    "bias": [6]
-                },
-                "pool": {
-                    "ksize": [1, 2, 2, 1],
-                    "strides": [1, 2, 2, 1]
-                }
-            },
-            {
-                "conv": {
-                    "filter": [5, 5, 6, 16],
-                    "bias": [16]
-                },
-                "pool": {
-                    "ksize": [1, 2, 2, 1],
-                    "strides": [1, 2, 2, 1]
-                }
-            },
-            {
-                "conv": {
-                    "filter": [5, 5, 16, 120],
-                    "bias": [120]
-                },
-                "pool": {
-                    "ksize": [1, 2, 2, 1],
-                    "strides": [1, 2, 2, 1]
-                }
-            }
-        ],
-        "fc": [300]
-    },
+  "image": {
+    "root": "./image/",
+    "size": [
+      100,
+      100
+    ]
+  },
+  "aug": {
     "train": {
-        
+      "factor": 400,
+      "output": "aug-train"
+    },
+    "test": {
+      "factor": 100,
+      "output": "aug-test"
     }
+  },
+  "labels": [
+    "红茶",
+    "绿茶",
+    "茉莉花茶",
+    "乌龙茶"
+  ],
+  "network": {
+    "active": "LeNet5",
+    "lenet5": {
+      "cnn": [
+        {
+          "conv": {
+            "filter": [5, 5, 3, 6],
+            "bias": [6]
+          },
+          "pool": {
+            "ksize": [1, 2, 2, 1],
+            "strides": [1, 2, 2, 1]
+          }
+        },
+        {
+          "conv": {
+            "filter": [5, 5, 6, 16],
+            "bias": [16]
+          },
+          "pool": {
+            "ksize": [1, 2, 2, 1],
+            "strides": [1, 2, 2, 1]
+          }
+        },
+        {
+          "conv": {
+            "filter": [5, 5, 16, 120],
+            "bias": [120]
+          },
+          "pool": {
+            "ksize": [1, 2, 2, 1],
+            "strides": [1, 2, 2, 1]
+          }
+        }
+      ],
+      "fc": [300]
+    },
+    "googlenet": {
+      "paths": [
+        {},
+        {},
+        {}
+      ]
+    }
+  },
+  "train": {}
 }
