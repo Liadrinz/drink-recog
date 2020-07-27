@@ -28,24 +28,28 @@ loader = Loader()
 sess = tf.InteractiveSession()
 sess.run(init)
 
-for step in range(100000):
-    batch_x1, batch_y1 = loader.next_batch(128, 'train')
-    batch_x2, batch_y2 = loader.next_batch(128, 'train')
+def train():
+    for step in range(100000):
+        batch_x1, batch_y1 = loader.next_batch(128, 'train')
+        batch_x2, batch_y2 = loader.next_batch(128, 'train')
 
-    batch_y = (batch_y1 == batch_y2).astype('float')
+        batch_y = (batch_y1 == batch_y2).astype('float')
 
-    _, loss_v = sess.run([train_step, siamese.loss], feed_dict={
-        siamese.x1: batch_x1,
-        siamese.x2: batch_x2,
-        siamese.y_: batch_y
-    })
+        _, loss_v = sess.run([train_step, siamese.loss], feed_dict={
+            siamese.x1: batch_x1,
+            siamese.x2: batch_x2,
+            siamese.y_: batch_y
+        })
 
-    if np.isnan(loss_v):
-        print('Model diverged with loss = NaN')
-        quit()
-    
-    if step % 10 == 0:
-        print(f'step: {step}, loss: {loss_v}')
+        if np.isnan(loss_v):
+            print('Model diverged with loss = NaN')
+            quit()
+        
+        if step % 10 == 0:
+            print(f'step: {step}, loss: {loss_v}')
 
-    if step % 100 == 0 and step > 0:
-        saver.save(sess, 'model.ckpt')
+        if step % 100 == 0 and step > 0:
+            saver.save(sess, 'model.ckpt')
+
+if __name__ == "__main__":
+    train()

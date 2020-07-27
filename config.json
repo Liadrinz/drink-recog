@@ -23,7 +23,7 @@
     "乌龙茶"
   ],
   "network": {
-    "active": "LeNet5",
+    "active": "googlenet",
     "lenet5": {
       "cnn": [
         {

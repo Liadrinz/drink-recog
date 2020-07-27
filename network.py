@@ -35,17 +35,22 @@ class Siamese:
         return x
     
     def googlenet(self, x):
+        x = self.g_conv(x, 3, 8, 16)
+        x = self.g_conv(x, 64, 96, 128)
         return x
     
-    def g_conv(self, x):
-        x1 = self.conv(x, [1, 1, 3, 128], [128])
-        x2 = self.conv(x, [1, 1, 3, 16], [16])
-        x2 = self.conv(x2, [3, 3, 16, 128], [128])
-        x3 = self.conv(x, [1, 1, 3, 16], [16])
-        x3 = self.conv(x3, [5, 5, 16, 128], [128])
-        x4 = self.pool(x, [1, 3, 3, 1], [1, 2, 2, 1])
-        x4 = self.conv(x4, [1, 1, 3, 128], [128])
-        return tf.concat([x1, x2, x3, x4])
+    def assist_classifier(self, x):
+        return x
+
+    def g_conv(self, x, c1, c2, c3):
+        x1 = self.conv(x, [1, 1, c1, c3], [c3])
+        x2 = self.conv(x, [1, 1, c1, c2], [c2])
+        x2 = self.conv(x2, [3, 3, c2, c3], [c3])
+        x3 = self.conv(x, [1, 1, c1, c2], [c2])
+        x3 = self.conv(x3, [5, 5, c2, c3], [c3])
+        x4 = self.pool(x, [1, 3, 3, 1], [1, 1, 1, 1])
+        x4 = self.conv(x4, [1, 1, c1, c3], [c3])
+        return tf.concat([x1, x2, x3, x4], axis=-1)
 
     def conv(self, x, filter_size, bias_size):
         filter = tf.Variable(tf.truncated_normal(filter_size))
